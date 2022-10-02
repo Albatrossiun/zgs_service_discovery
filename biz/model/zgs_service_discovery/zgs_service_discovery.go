@@ -9,35 +9,35 @@ import (
 )
 
 // 注册
-type RegistQuery struct {
+type RegistRequest struct {
 	UUID string `thrift:"uuid,1" form:"uuid" json:"uuid" query:"uuid"`
 	IP   string `thrift:"ip,2" form:"ip" json:"ip" query:"ip"`
 	Port string `thrift:"port,3" form:"port" json:"port" query:"port"`
 }
 
-func NewRegistQuery() *RegistQuery {
-	return &RegistQuery{}
+func NewRegistRequest() *RegistRequest {
+	return &RegistRequest{}
 }
 
-func (p *RegistQuery) GetUUID() (v string) {
+func (p *RegistRequest) GetUUID() (v string) {
 	return p.UUID
 }
 
-func (p *RegistQuery) GetIP() (v string) {
+func (p *RegistRequest) GetIP() (v string) {
 	return p.IP
 }
 
-func (p *RegistQuery) GetPort() (v string) {
+func (p *RegistRequest) GetPort() (v string) {
 	return p.Port
 }
 
-var fieldIDToName_RegistQuery = map[int16]string{
+var fieldIDToName_RegistRequest = map[int16]string{
 	1: "uuid",
 	2: "ip",
 	3: "port",
 }
 
-func (p *RegistQuery) Read(iprot thrift.TProtocol) (err error) {
+func (p *RegistRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -106,7 +106,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_RegistQuery[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_RegistRequest[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -116,7 +116,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *RegistQuery) ReadField1(iprot thrift.TProtocol) error {
+func (p *RegistRequest) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -125,7 +125,7 @@ func (p *RegistQuery) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RegistQuery) ReadField2(iprot thrift.TProtocol) error {
+func (p *RegistRequest) ReadField2(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -134,7 +134,7 @@ func (p *RegistQuery) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RegistQuery) ReadField3(iprot thrift.TProtocol) error {
+func (p *RegistRequest) ReadField3(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadString(); err != nil {
 		return err
 	} else {
@@ -143,9 +143,9 @@ func (p *RegistQuery) ReadField3(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *RegistQuery) Write(oprot thrift.TProtocol) (err error) {
+func (p *RegistRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("RegistQuery"); err != nil {
+	if err = oprot.WriteStructBegin("RegistRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -180,7 +180,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *RegistQuery) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *RegistRequest) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("uuid", thrift.STRING, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -197,7 +197,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *RegistQuery) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *RegistRequest) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("ip", thrift.STRING, 2); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -214,7 +214,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *RegistQuery) writeField3(oprot thrift.TProtocol) (err error) {
+func (p *RegistRequest) writeField3(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("port", thrift.STRING, 3); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -231,11 +231,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 3 end error: ", p), err)
 }
 
-func (p *RegistQuery) String() string {
+func (p *RegistRequest) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("RegistQuery(%+v)", *p)
+	return fmt.Sprintf("RegistRequest(%+v)", *p)
 }
 
 type RegistResponse struct {
@@ -789,29 +789,29 @@ func (p *AgentInfo) String() string {
 	return fmt.Sprintf("AgentInfo(%+v)", *p)
 }
 
-type ListAgentsInfoQuery struct {
+type ListAgentsInfoRequest struct {
 	Group  []string `thrift:"group,1" form:"group" json:"group" query:"group"`
 	Status []string `thrift:"status,2" form:"status" json:"status" query:"status"`
 }
 
-func NewListAgentsInfoQuery() *ListAgentsInfoQuery {
-	return &ListAgentsInfoQuery{}
+func NewListAgentsInfoRequest() *ListAgentsInfoRequest {
+	return &ListAgentsInfoRequest{}
 }
 
-func (p *ListAgentsInfoQuery) GetGroup() (v []string) {
+func (p *ListAgentsInfoRequest) GetGroup() (v []string) {
 	return p.Group
 }
 
-func (p *ListAgentsInfoQuery) GetStatus() (v []string) {
+func (p *ListAgentsInfoRequest) GetStatus() (v []string) {
 	return p.Status
 }
 
-var fieldIDToName_ListAgentsInfoQuery = map[int16]string{
+var fieldIDToName_ListAgentsInfoRequest = map[int16]string{
 	1: "group",
 	2: "status",
 }
 
-func (p *ListAgentsInfoQuery) Read(iprot thrift.TProtocol) (err error) {
+func (p *ListAgentsInfoRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -870,7 +870,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAgentsInfoQuery[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAgentsInfoRequest[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -880,7 +880,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ListAgentsInfoQuery) ReadField1(iprot thrift.TProtocol) error {
+func (p *ListAgentsInfoRequest) ReadField1(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -902,7 +902,7 @@ func (p *ListAgentsInfoQuery) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ListAgentsInfoQuery) ReadField2(iprot thrift.TProtocol) error {
+func (p *ListAgentsInfoRequest) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -924,9 +924,9 @@ func (p *ListAgentsInfoQuery) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ListAgentsInfoQuery) Write(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsInfoRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListAgentsInfoQuery"); err != nil {
+	if err = oprot.WriteStructBegin("ListAgentsInfoRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -957,7 +957,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ListAgentsInfoQuery) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsInfoRequest) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("group", thrift.LIST, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -982,7 +982,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *ListAgentsInfoQuery) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsInfoRequest) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("status", thrift.LIST, 2); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1007,11 +1007,11 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *ListAgentsInfoQuery) String() string {
+func (p *ListAgentsInfoRequest) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListAgentsInfoQuery(%+v)", *p)
+	return fmt.Sprintf("ListAgentsInfoRequest(%+v)", *p)
 }
 
 type ListAgentsInfoResponse struct {
@@ -1217,9 +1217,9 @@ func (p *ListAgentsInfoResponse) String() string {
 }
 
 type ZgsServiceDiscovery interface {
-	Regist(ctx context.Context, request *RegistQuery) (r *RegistResponse, err error)
+	Regist(ctx context.Context, request *RegistRequest) (r *RegistResponse, err error)
 
-	ListAgents(ctx context.Context, reqeust *ListAgentsInfoQuery) (r *ListAgentsInfoResponse, err error)
+	ListAgents(ctx context.Context, reqeust *ListAgentsInfoRequest) (r *ListAgentsInfoResponse, err error)
 }
 
 type ZgsServiceDiscoveryClient struct {
@@ -1248,7 +1248,7 @@ func (p *ZgsServiceDiscoveryClient) Client_() thrift.TClient {
 	return p.c
 }
 
-func (p *ZgsServiceDiscoveryClient) Regist(ctx context.Context, request *RegistQuery) (r *RegistResponse, err error) {
+func (p *ZgsServiceDiscoveryClient) Regist(ctx context.Context, request *RegistRequest) (r *RegistResponse, err error) {
 	var _args ZgsServiceDiscoveryRegistArgs
 	_args.Request = request
 	var _result ZgsServiceDiscoveryRegistResult
@@ -1257,7 +1257,7 @@ func (p *ZgsServiceDiscoveryClient) Regist(ctx context.Context, request *RegistQ
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *ZgsServiceDiscoveryClient) ListAgents(ctx context.Context, reqeust *ListAgentsInfoQuery) (r *ListAgentsInfoResponse, err error) {
+func (p *ZgsServiceDiscoveryClient) ListAgents(ctx context.Context, reqeust *ListAgentsInfoRequest) (r *ListAgentsInfoResponse, err error) {
 	var _args ZgsServiceDiscoveryListAgentsArgs
 	_args.Reqeust = reqeust
 	var _result ZgsServiceDiscoveryListAgentsResult
@@ -1406,16 +1406,16 @@ func (p *zgsServiceDiscoveryProcessorListAgents) Process(ctx context.Context, se
 }
 
 type ZgsServiceDiscoveryRegistArgs struct {
-	Request *RegistQuery `thrift:"request,1"`
+	Request *RegistRequest `thrift:"request,1"`
 }
 
 func NewZgsServiceDiscoveryRegistArgs() *ZgsServiceDiscoveryRegistArgs {
 	return &ZgsServiceDiscoveryRegistArgs{}
 }
 
-var ZgsServiceDiscoveryRegistArgs_Request_DEFAULT *RegistQuery
+var ZgsServiceDiscoveryRegistArgs_Request_DEFAULT *RegistRequest
 
-func (p *ZgsServiceDiscoveryRegistArgs) GetRequest() (v *RegistQuery) {
+func (p *ZgsServiceDiscoveryRegistArgs) GetRequest() (v *RegistRequest) {
 	if !p.IsSetRequest() {
 		return ZgsServiceDiscoveryRegistArgs_Request_DEFAULT
 	}
@@ -1490,7 +1490,7 @@ ReadStructEndError:
 }
 
 func (p *ZgsServiceDiscoveryRegistArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Request = NewRegistQuery()
+	p.Request = NewRegistRequest()
 	if err := p.Request.Read(iprot); err != nil {
 		return err
 	}
@@ -1698,16 +1698,16 @@ func (p *ZgsServiceDiscoveryRegistResult) String() string {
 }
 
 type ZgsServiceDiscoveryListAgentsArgs struct {
-	Reqeust *ListAgentsInfoQuery `thrift:"reqeust,1"`
+	Reqeust *ListAgentsInfoRequest `thrift:"reqeust,1"`
 }
 
 func NewZgsServiceDiscoveryListAgentsArgs() *ZgsServiceDiscoveryListAgentsArgs {
 	return &ZgsServiceDiscoveryListAgentsArgs{}
 }
 
-var ZgsServiceDiscoveryListAgentsArgs_Reqeust_DEFAULT *ListAgentsInfoQuery
+var ZgsServiceDiscoveryListAgentsArgs_Reqeust_DEFAULT *ListAgentsInfoRequest
 
-func (p *ZgsServiceDiscoveryListAgentsArgs) GetReqeust() (v *ListAgentsInfoQuery) {
+func (p *ZgsServiceDiscoveryListAgentsArgs) GetReqeust() (v *ListAgentsInfoRequest) {
 	if !p.IsSetReqeust() {
 		return ZgsServiceDiscoveryListAgentsArgs_Reqeust_DEFAULT
 	}
@@ -1782,7 +1782,7 @@ ReadStructEndError:
 }
 
 func (p *ZgsServiceDiscoveryListAgentsArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Reqeust = NewListAgentsInfoQuery()
+	p.Reqeust = NewListAgentsInfoRequest()
 	if err := p.Reqeust.Read(iprot); err != nil {
 		return err
 	}

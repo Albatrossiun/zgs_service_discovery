@@ -2,7 +2,7 @@ namespace go zgs_service_discovery
 
 // 注册
 
-struct RegistQuery {
+struct RegistRequest {
     1: string uuid;
     2: string ip;
     3: string port;
@@ -24,7 +24,7 @@ struct AgentInfo {
     6: string ext;
 }
 
-struct ListAgentsInfoQuery {
+struct ListAgentsInfoRequest {
     1: list<string> group;
     2: list<string> status;
 }
@@ -35,6 +35,6 @@ struct ListAgentsInfoResponse {
 }
 
 service ZgsServiceDiscovery {
-    RegistResponse Regist(1:RegistQuery request) (api.post="/regist");
-    ListAgentsInfoResponse ListAgents(1:ListAgentsInfoQuery reqeust) (api.post="/list_agents");
+    RegistResponse Regist(1:RegistRequest request) (api.post="/regist");
+    ListAgentsInfoResponse ListAgents(1:ListAgentsInfoRequest reqeust) (api.post="/list_agents");
 }

@@ -3,11 +3,17 @@
 package main
 
 import (
+	"github.com/Albatrossiun/zgs_service_discovery/biz/dao"
+	"github.com/Albatrossiun/zgs_service_discovery/biz/storage"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
 func main() {
 	h := server.Default()
+
+	storage.InitRedisConn()
+	dao.InitRedis()
+	dao.InitUserRepository()
 
 	register(h)
 	h.Spin()

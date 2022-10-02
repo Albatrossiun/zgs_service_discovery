@@ -13,7 +13,7 @@ import (
 // @router /regist [POST]
 func Regist(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req zgs_service_discovery.RegistQuery
+	var req zgs_service_discovery.RegistRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(400, err.Error())
@@ -29,7 +29,7 @@ func Regist(ctx context.Context, c *app.RequestContext) {
 // @router /list_agents [POST]
 func ListAgents(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req zgs_service_discovery.ListAgentsInfoQuery
+	var req zgs_service_discovery.ListAgentsInfoRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(400, err.Error())
