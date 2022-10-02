@@ -19,7 +19,7 @@ struct AgentInfo {
     1: string uuid;
     2: string ip;
     3: string port;
-    4: string status;
+    4: string status;// online offline
     5: string group;
     6: string ext;
 }

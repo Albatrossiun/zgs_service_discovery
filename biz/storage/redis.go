@@ -3,22 +3,36 @@ package storage
 import (
 	"fmt"
 	"github.com/gomodule/redigo/redis"
+	"time"
 )
 
 var (
-	redisConn redis.Conn
+	redisPool *redis.Pool
 )
 
-func InitRedisConn() {
-	var err error
-	redisConn, err = redis.Dial("tcp", "124.222.8.21:6379")
+func InitRedisPool() error {
+	redisPool = &redis.Pool{
+		MaxIdle:     1,
+		MaxActive:   20,
+		IdleTimeout: 6 * time.Second,
+		// Dial or DialContext must be set. When both are set, DialContext takes precedence over Dial.
+		Dial: func() (redis.Conn, error) {
+			return redis.Dial("tcp", "124.222.8.21:6379", redis.DialPassword("123abc"))
+		},
+	}
+	conn := redisPool.Get()
+	res, err := conn.Do("ping")
 	if err != nil {
 		fmt.Println(err)
-		return
+		return err
 	}
-	fmt.Println(redisConn)
+	if res.(string) != "PONG" {
+		fmt.Println("res = ", res)
+		return fmt.Errorf("ping failed")
+	}
+	return nil
 }
 
-func GetRedisConn() redis.Conn {
-	return redisConn
+func GetRedisPool() *redis.Pool {
+	return redisPool
 }

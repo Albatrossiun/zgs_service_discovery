@@ -7,14 +7,14 @@ import (
 )
 
 var (
-	conn           redis.Conn
+	pool           *redis.Pool
 	userRepository UserRepository
 )
 
 type UserRepository struct{}
 
 func InitRedis() {
-	conn = storage.GetRedisConn()
+	pool = storage.GetRedisPool()
 }
 
 func GetUserRepository() UserRepository {
@@ -27,23 +27,20 @@ func InitUserRepository() {
 
 func (u *UserRepository) Regist(uuid, ipAndPort string) error {
 	// 通过go向redis写入数据
-	_, err := conn.Do("Set", uuid, ipAndPort)
+	_, err := pool.Get().Do("Set", uuid, ipAndPort)
 	if err != nil {
 		fmt.Println("repo Regist err=", err)
 		return err
 	}
-	// 关闭连接
-	defer conn.Close()
 	return nil
 }
 
 func (u *UserRepository) ListAgents(uuid string) (string, error) {
 	// 读取数据
-	r, err := redis.String(conn.Do("Get", uuid))
+	r, err := redis.String(pool.Get().Do("Get", uuid))
 	if err != nil {
 		fmt.Println("repo ListAgents err=", err)
 		return "", err
 	}
 	return r, nil
-	//fmt.Println("Manipulate success, the ip and port of uuid is", r)
 }

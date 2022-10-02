@@ -18,13 +18,17 @@ func NewUserService() *UserService {
 	}
 }
 
-type IpAndPortObj struct {
-	Ip   string `json:"ip"`
-	Port string `json:"Port"`
+type UserObj struct {
+	Ip          string `json:"ip"`
+	Port        string `json:"port"`
+	Status      string `json:"status"`
+	Group       string `json:"group"`
+	Ext         string `json:"ext"`
+	OfflineTime int    `json:"offline_time"`
 }
 
 func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.RegistRequest) zgs_service_discovery.RegistResponse {
-	ipAndPortObj := &IpAndPortObj{
+	ipAndPortObj := &UserObj{
 		Ip:   req.IP,
 		Port: req.Port,
 	}
@@ -37,7 +41,8 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 		}
 		return resp
 	}
-	err = u.userDomain.Regist(req.UUID, string(ipAndPortJson))
+	// TODO 幂等性校验
+	err = u.userDomain.Regist("service_"+req.UUID, string(ipAndPortJson))
 	if err != nil {
 		fmt.Println("service Regist err=", err)
 		resp := zgs_service_discovery.RegistResponse{
