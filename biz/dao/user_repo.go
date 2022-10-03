@@ -25,9 +25,9 @@ func InitUserRepository() {
 	userRepository = UserRepository{}
 }
 
-func (u *UserRepository) Regist(uuid, ipAndPort string) error {
+func (u *UserRepository) Regist(uuid, agentsObjJson string) error {
 	// 通过go向redis写入数据
-	_, err := pool.Get().Do("Set", uuid, ipAndPort)
+	_, err := pool.Get().Do("Set", uuid, agentsObjJson)
 	if err != nil {
 		fmt.Println("repo Regist err=", err)
 		return err

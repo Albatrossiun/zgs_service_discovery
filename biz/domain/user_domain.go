@@ -15,8 +15,8 @@ func NewUserDomain() *UserDomain {
 	}
 }
 
-func (u *UserDomain) Regist(uuid, ipAndPort string) error {
-	err := u.userRepository.Regist(uuid, ipAndPort)
+func (u *UserDomain) Regist(uuid, agentsObjJson string) error {
+	err := u.userRepository.Regist(uuid, agentsObjJson)
 	if err != nil {
 		fmt.Println("domain Regist err=", err)
 		return err

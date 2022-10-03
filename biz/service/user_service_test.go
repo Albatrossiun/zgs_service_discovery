@@ -11,6 +11,7 @@ import (
 
 var (
 	srv *UserService
+	ctx context.Context
 )
 
 func init() {
@@ -24,9 +25,19 @@ func init() {
 	srv = NewUserService()
 }
 
-func TestListAgents(t *testing.T) {
+func TestRegist(t *testing.T) {
+	var group []string
+	group = append(group, "online")
+	req := zgs_service_discovery.RegistRequest{
+		UUID: "qwer",
+		IP:   "124.222.8.21",
+		Port: "9911",
+	}
+	resp := srv.Regist(ctx, req)
+	fmt.Println(resp)
+}
 
-	ctx := context.Background()
+func TestListAgents(t *testing.T) {
 	var group []string
 	group = append(group, "online")
 	req := zgs_service_discovery.ListAgentsInfoRequest{

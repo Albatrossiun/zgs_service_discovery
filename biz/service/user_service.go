@@ -36,24 +36,53 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 		Port:   req.Port,
 		Status: "online",
 	}
-	ipAndPortJson, err := json.Marshal(agentsObj)
+	agentsObjJson, err := json.Marshal(agentsObj)
 	if err != nil {
 		fmt.Println("service Regist Marshal err=", err)
-		resp := zgs_service_discovery.RegistResponse{
+		return zgs_service_discovery.RegistResponse{
 			Code:    500,
 			Message: err.Error(),
 		}
-		return resp
 	}
-	// TODO 幂等性校验
-	err = u.userDomain.Regist("service_"+req.UUID, string(ipAndPortJson))
+
+	// 获取redis所有的agents
+	agentsJsonList, err := u.userDomain.ListAgents()
+	if err != nil {
+		fmt.Println("service ListAgents() err=", err)
+		return zgs_service_discovery.RegistResponse{
+			Code:    500,
+			Message: err.Error(),
+		}
+	}
+
+	if len(agentsJsonList) != 0 {
+		for _, str := range agentsJsonList {
+			obj := AgentsObj{}
+			err = json.Unmarshal(*(*[]byte)(unsafe.Pointer(&str)), &obj)
+			if err != nil {
+				fmt.Println("service Regist Unmarshal err=", err)
+				return zgs_service_discovery.RegistResponse{
+					Code:    500,
+					Message: err.Error(),
+				}
+			}
+			if obj.UUid == req.UUID && obj.Ip == req.IP && obj.Port == req.Port {
+				fmt.Println("service Regist agent has existed")
+				return zgs_service_discovery.RegistResponse{
+					Code:    123,
+					Message: err.Error(),
+				}
+			}
+		}
+	}
+
+	err = u.userDomain.Regist("service_"+req.UUID, string(agentsObjJson))
 	if err != nil {
 		fmt.Println("service Regist err=", err)
-		resp := zgs_service_discovery.RegistResponse{
+		return zgs_service_discovery.RegistResponse{
 			Code:    500,
 			Message: err.Error(),
 		}
-		return resp
 	}
 	return zgs_service_discovery.RegistResponse{Code: 200}
 }
