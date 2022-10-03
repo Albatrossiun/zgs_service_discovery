@@ -24,11 +24,11 @@ func (u *UserDomain) Regist(uuid, ipAndPort string) error {
 	return nil
 }
 
-func (u *UserDomain) ListAgents(uuid string) (string, error) {
-	ipAndPort, err := u.userRepository.ListAgents(uuid)
+func (u *UserDomain) ListAgents(groupList, statusList []string) (string, error) {
+	agentsList, err := u.userRepository.ListAgents(groupList, statusList)
 	if err != nil {
 		fmt.Println("domain ListAgents err=", err)
 		return "", err
 	}
-	return ipAndPort, nil
+	return agentsList, nil
 }

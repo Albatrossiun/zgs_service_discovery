@@ -18,7 +18,7 @@ func NewUserService() *UserService {
 	}
 }
 
-type UserObj struct {
+type AgentsObj struct {
 	Ip          string `json:"ip"`
 	Port        string `json:"port"`
 	Status      string `json:"status"`
@@ -28,11 +28,11 @@ type UserObj struct {
 }
 
 func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.RegistRequest) zgs_service_discovery.RegistResponse {
-	ipAndPortObj := &UserObj{
+	agentsObj := &AgentsObj{
 		Ip:   req.IP,
 		Port: req.Port,
 	}
-	ipAndPortJson, err := json.Marshal(ipAndPortObj)
+	ipAndPortJson, err := json.Marshal(agentsObj)
 	if err != nil {
 		fmt.Println("service Regist Marshal err=", err)
 		resp := zgs_service_discovery.RegistResponse{
@@ -55,5 +55,21 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 }
 
 func (u *UserService) ListAgents(ctx context.Context, req zgs_service_discovery.ListAgentsInfoRequest) zgs_service_discovery.ListAgentsInfoResponse {
+
+	agentsJson, err := u.userDomain.ListAgents(req.Group, req.Status)
+	if err != nil {
+		fmt.Println("service ListAgents err=", err)
+		return zgs_service_discovery.ListAgentsInfoResponse{}
+	}
+	fmt.Println("agentsJson = ", agentsJson)
+	//var agentsList []AgentsObj
+	//for _, agentStr := range agentsJson {
+	//
+	//}
+	//err = json.Unmarshal()
+	//if len(agentsList) == 0 {
+	//	fmt.Println("service ListAgents agentsList is empty")
+	//	return zgs_service_discovery.ListAgentsInfoResponse{}
+	//}
 	return zgs_service_discovery.ListAgentsInfoResponse{}
 }
