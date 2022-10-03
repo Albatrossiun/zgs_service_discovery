@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/domain"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/model/zgs_service_discovery"
-	"unsafe"
 )
 
 type UserService struct {
@@ -58,7 +57,7 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 	if len(agentsJsonList) != 0 {
 		for _, str := range agentsJsonList {
 			obj := AgentsObj{}
-			err = json.Unmarshal(*(*[]byte)(unsafe.Pointer(&str)), &obj)
+			err = json.Unmarshal([]byte(str), &obj)
 			if err != nil {
 				fmt.Println("service Regist Unmarshal err=", err)
 				return zgs_service_discovery.RegistResponse{
@@ -66,11 +65,10 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 					Message: err.Error(),
 				}
 			}
-			if obj.UUid == req.UUID && obj.Ip == req.IP && obj.Port == req.Port {
+			if obj.UUid == req.UUID {
 				fmt.Println("service Regist agent has existed")
 				return zgs_service_discovery.RegistResponse{
-					Code:    123,
-					Message: err.Error(),
+					Code: 123,
 				}
 			}
 		}
@@ -115,7 +113,7 @@ func (u *UserService) ListAgents(ctx context.Context, req zgs_service_discovery.
 	var agentsObjList []AgentsObj
 	for _, agentJson := range agentsJsonList {
 		var agentsObj AgentsObj
-		err = json.Unmarshal(*(*[]byte)(unsafe.Pointer(&agentJson)), &agentsObj)
+		err = json.Unmarshal([]byte(agentJson), &agentsObj)
 		if err != nil {
 			fmt.Println("service ListAgents() Unmarshal err=", err)
 			return zgs_service_discovery.ListAgentsInfoResponse{}
