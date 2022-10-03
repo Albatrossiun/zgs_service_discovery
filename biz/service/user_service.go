@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/domain"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/model/zgs_service_discovery"
+	"unsafe"
 )
 
 type UserService struct {
@@ -19,6 +20,7 @@ func NewUserService() *UserService {
 }
 
 type AgentsObj struct {
+	UUid        string `json:"uuid"`
 	Ip          string `json:"ip"`
 	Port        string `json:"port"`
 	Status      string `json:"status"`
@@ -29,8 +31,10 @@ type AgentsObj struct {
 
 func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.RegistRequest) zgs_service_discovery.RegistResponse {
 	agentsObj := &AgentsObj{
-		Ip:   req.IP,
-		Port: req.Port,
+		UUid:   req.UUID,
+		Ip:     req.IP,
+		Port:   req.Port,
+		Status: "online",
 	}
 	ipAndPortJson, err := json.Marshal(agentsObj)
 	if err != nil {
@@ -55,21 +59,53 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 }
 
 func (u *UserService) ListAgents(ctx context.Context, req zgs_service_discovery.ListAgentsInfoRequest) zgs_service_discovery.ListAgentsInfoResponse {
-
-	agentsJson, err := u.userDomain.ListAgents(req.Group, req.Status)
+	agentsJsonList, err := u.userDomain.ListAgents()
 	if err != nil {
-		fmt.Println("service ListAgents err=", err)
-		return zgs_service_discovery.ListAgentsInfoResponse{}
+		fmt.Println("service ListAgents() err=", err)
+		return zgs_service_discovery.ListAgentsInfoResponse{
+			Total: 0,
+		}
 	}
-	fmt.Println("agentsJson = ", agentsJson)
-	//var agentsList []AgentsObj
-	//for _, agentStr := range agentsJson {
-	//
-	//}
-	//err = json.Unmarshal()
-	//if len(agentsList) == 0 {
-	//	fmt.Println("service ListAgents agentsList is empty")
-	//	return zgs_service_discovery.ListAgentsInfoResponse{}
-	//}
-	return zgs_service_discovery.ListAgentsInfoResponse{}
+	if len(agentsJsonList) == 0 {
+		fmt.Println("service ListAgents() agentsJsonList is empty", err)
+		return zgs_service_discovery.ListAgentsInfoResponse{
+			Total: 0,
+		}
+	}
+
+	// set
+	agentsStatus := req.Status
+	type void struct{}
+	var member void
+
+	set := make(map[string]void) // New empty set
+	for _, statusStr := range agentsStatus {
+		set[statusStr] = member
+	}
+
+	var agentsObjList []AgentsObj
+	for _, agentJson := range agentsJsonList {
+		var agentsObj AgentsObj
+		err = json.Unmarshal(*(*[]byte)(unsafe.Pointer(&agentJson)), &agentsObj)
+		if err != nil {
+			fmt.Println("service ListAgents() Unmarshal err=", err)
+			return zgs_service_discovery.ListAgentsInfoResponse{}
+		}
+
+		if _, exists := set[agentsObj.Status]; !exists {
+			agentsObjList = append(agentsObjList, agentsObj)
+		}
+	}
+
+	var agents []*zgs_service_discovery.AgentInfo
+	for _, obj := range agentsObjList {
+		agent := AgentsObjToAgentInfo(obj)
+		agents = append(agents, &agent)
+	}
+
+	total := len(agents)
+	return zgs_service_discovery.ListAgentsInfoResponse{
+		Total:  int32(total),
+		Agents: agents,
+	}
 }

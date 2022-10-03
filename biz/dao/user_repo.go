@@ -35,18 +35,22 @@ func (u *UserRepository) Regist(uuid, ipAndPort string) error {
 	return nil
 }
 
-func (u *UserRepository) ListAgents(groupList, statusList []string) (string, error) {
+func (u *UserRepository) ListAgents() ([]string, error) {
 	// 读取数据
 	uuid := "service_*"
-	agentsJsonList, err := pool.Get().Do("Get", uuid)
+	keys, err := pool.Get().Do("Keys", uuid)
 	if err != nil {
 		fmt.Println("repo ListAgents Get Do err=", err)
-		return "", err
+		return nil, err
 	}
-	//r, err := redis.String()
-	//if err != nil {
-	//	fmt.Println("repo ListAgents err=", err)
-	//	return nil, err
+
+	jsonList, err := redis.Strings(pool.Get().Do("mget", keys.([]interface{})...))
+	if err != nil {
+		fmt.Println("repo ListAgents Get Do err=", err)
+		return nil, err
+	}
+	//for _, value := range jsonList {
+	//  fmt.Println(value)
 	//}
-	return agentsJsonList.(string), nil
+	return jsonList, nil
 }
