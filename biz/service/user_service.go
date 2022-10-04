@@ -45,31 +45,20 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 	}
 
 	// 获取redis所有的agents
-	agentsJsonList, err := u.userDomain.ListAgents()
+	agentsObjList, err := u.GetAllAgentsInRedis()
 	if err != nil {
-		fmt.Println("service ListAgents() err=", err)
+		fmt.Println("service u.GetAllAgentsInRedis() err=", err)
 		return zgs_service_discovery.RegistResponse{
 			Code:    500,
 			Message: err.Error(),
 		}
 	}
-
-	if len(agentsJsonList) != 0 {
-		for _, str := range agentsJsonList {
-			obj := AgentsObj{}
-			err = json.Unmarshal([]byte(str), &obj)
-			if err != nil {
-				fmt.Println("service Regist Unmarshal err=", err)
-				return zgs_service_discovery.RegistResponse{
-					Code:    500,
-					Message: err.Error(),
-				}
-			}
-			if obj.UUid == req.UUID {
-				fmt.Println("service Regist agent has existed")
-				return zgs_service_discovery.RegistResponse{
-					Code: 123,
-				}
+	for _, obj := range agentsObjList {
+		if obj.UUid == req.UUID {
+			fmt.Println("service Regist agent has existed")
+			return zgs_service_discovery.RegistResponse{
+				Code:    200,
+				Message: "multiple registration",
 			}
 		}
 	}
@@ -82,19 +71,19 @@ func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.Regi
 			Message: err.Error(),
 		}
 	}
-	return zgs_service_discovery.RegistResponse{Code: 200}
+	return zgs_service_discovery.RegistResponse{Code: 200, Message: "registered successfully"}
 }
 
 func (u *UserService) ListAgents(ctx context.Context, req zgs_service_discovery.ListAgentsInfoRequest) zgs_service_discovery.ListAgentsInfoResponse {
-	agentsJsonList, err := u.userDomain.ListAgents()
+	agentsObjList, err := u.GetAllAgentsInRedis()
 	if err != nil {
 		fmt.Println("service ListAgents() err=", err)
 		return zgs_service_discovery.ListAgentsInfoResponse{
 			Total: 0,
 		}
 	}
-	if len(agentsJsonList) == 0 {
-		fmt.Println("service ListAgents() agentsJsonList is empty", err)
+	if len(agentsObjList) == 0 {
+		fmt.Println("service ListAgents() agentsJsonList is empty")
 		return zgs_service_discovery.ListAgentsInfoResponse{
 			Total: 0,
 		}
@@ -110,22 +99,15 @@ func (u *UserService) ListAgents(ctx context.Context, req zgs_service_discovery.
 		set[statusStr] = member
 	}
 
-	var agentsObjList []AgentsObj
-	for _, agentJson := range agentsJsonList {
-		var agentsObj AgentsObj
-		err = json.Unmarshal([]byte(agentJson), &agentsObj)
-		if err != nil {
-			fmt.Println("service ListAgents() Unmarshal err=", err)
-			return zgs_service_discovery.ListAgentsInfoResponse{}
-		}
-
-		if _, exists := set[agentsObj.Status]; !exists {
-			agentsObjList = append(agentsObjList, agentsObj)
+	var agentsList []AgentsObj
+	for _, obj := range agentsObjList {
+		if _, exists := set[obj.Status]; !exists {
+			agentsList = append(agentsList, obj)
 		}
 	}
 
 	var agents []*zgs_service_discovery.AgentInfo
-	for _, obj := range agentsObjList {
+	for _, obj := range agentsList {
 		agent := AgentsObjToAgentInfo(obj)
 		agents = append(agents, &agent)
 	}
@@ -135,4 +117,29 @@ func (u *UserService) ListAgents(ctx context.Context, req zgs_service_discovery.
 		Total:  int32(total),
 		Agents: agents,
 	}
+}
+
+func (u *UserService) GetAllAgentsInRedis() ([]AgentsObj, error) {
+	agentsJsonList, err := u.userDomain.ListAgents()
+	if err != nil {
+		fmt.Println("service GetAllAgentsInRedis() err=", err)
+		return nil, err
+	}
+	if len(agentsJsonList) == 0 {
+		fmt.Println("service GetAllAgentsInRedis() agentsJsonList is empty")
+		return nil, err
+	}
+
+	var agentsObjList []AgentsObj
+	for _, agentJson := range agentsJsonList {
+		var agentsObj AgentsObj
+		err = json.Unmarshal([]byte(agentJson), &agentsObj)
+		if err != nil {
+			fmt.Println("service ListAgents() Unmarshal err=", err)
+			return nil, err
+		}
+		agentsObjList = append(agentsObjList, agentsObj)
+	}
+
+	return agentsObjList, nil
 }

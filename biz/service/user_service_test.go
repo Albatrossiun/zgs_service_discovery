@@ -29,7 +29,7 @@ func TestRegist(t *testing.T) {
 	var group []string
 	group = append(group, "online")
 	req := zgs_service_discovery.RegistRequest{
-		UUID: "qwer",
+		UUID: "cdsx",
 		IP:   "124.222.8.21",
 		Port: "9911",
 	}
