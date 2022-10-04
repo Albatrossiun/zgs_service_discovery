@@ -25,6 +25,7 @@ func InitUserRepository() {
 	userRepository = UserRepository{}
 }
 
+// Regist create + update
 func (u *UserRepository) Regist(uuid, agentsObjJson string) error {
 	// 通过go向redis写入数据
 	_, err := pool.Get().Do("Set", uuid, agentsObjJson)
@@ -53,4 +54,13 @@ func (u *UserRepository) ListAgents() ([]string, error) {
 	//  fmt.Println(value)
 	//}
 	return jsonList, nil
+}
+
+func (u *UserRepository) DeleteAgents(uuid string) error {
+	_, err := pool.Get().Do("Del", uuid)
+	if err != nil {
+		fmt.Println("repo Regist delete agent err = ", err)
+		return err
+	}
+	return nil
 }

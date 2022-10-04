@@ -37,14 +37,14 @@ func Regist(ctx context.Context, c *app.RequestContext) {
 // @router /list_agents [POST]
 func ListAgents(ctx context.Context, c *app.RequestContext) {
 	var err error
-	var req zgs_service_discovery.ListAgentsInfoRequest
+	var req zgs_service_discovery.ListAgentsByGroupAndStatusRequest
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		c.String(400, err.Error())
 		return
 	}
 
-	resp := srv.ListAgents(ctx, req)
+	resp := srv.ListAgentsByGroupAndStatus(ctx, req)
 
 	c.JSON(200, resp)
 }

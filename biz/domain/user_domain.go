@@ -18,7 +18,7 @@ func NewUserDomain() *UserDomain {
 func (u *UserDomain) Regist(uuid, agentsObjJson string) error {
 	err := u.userRepository.Regist(uuid, agentsObjJson)
 	if err != nil {
-		fmt.Println("domain Regist err=", err)
+		fmt.Println("domain Regist err = ", err)
 		return err
 	}
 	return nil
@@ -27,8 +27,17 @@ func (u *UserDomain) Regist(uuid, agentsObjJson string) error {
 func (u *UserDomain) ListAgents() ([]string, error) {
 	agentsList, err := u.userRepository.ListAgents()
 	if err != nil {
-		fmt.Println("domain ListAgents err=", err)
+		fmt.Println("domain ListAgents err = ", err)
 		return nil, err
 	}
 	return agentsList, nil
+}
+
+func (u *UserDomain) DeleteAgents(uuid string) error {
+	err := u.userRepository.DeleteAgents(uuid)
+	if err != nil {
+		fmt.Println("domain DeleteAgents err = ", err)
+		return err
+	}
+	return nil
 }

@@ -789,29 +789,29 @@ func (p *AgentInfo) String() string {
 	return fmt.Sprintf("AgentInfo(%+v)", *p)
 }
 
-type ListAgentsInfoRequest struct {
+type ListAgentsByGroupAndStatusRequest struct {
 	Group  []string `thrift:"group,1" form:"group" json:"group" query:"group"`
 	Status []string `thrift:"status,2" form:"status" json:"status" query:"status"`
 }
 
-func NewListAgentsInfoRequest() *ListAgentsInfoRequest {
-	return &ListAgentsInfoRequest{}
+func NewListAgentsByGroupAndStatusRequest() *ListAgentsByGroupAndStatusRequest {
+	return &ListAgentsByGroupAndStatusRequest{}
 }
 
-func (p *ListAgentsInfoRequest) GetGroup() (v []string) {
+func (p *ListAgentsByGroupAndStatusRequest) GetGroup() (v []string) {
 	return p.Group
 }
 
-func (p *ListAgentsInfoRequest) GetStatus() (v []string) {
+func (p *ListAgentsByGroupAndStatusRequest) GetStatus() (v []string) {
 	return p.Status
 }
 
-var fieldIDToName_ListAgentsInfoRequest = map[int16]string{
+var fieldIDToName_ListAgentsByGroupAndStatusRequest = map[int16]string{
 	1: "group",
 	2: "status",
 }
 
-func (p *ListAgentsInfoRequest) Read(iprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusRequest) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -870,7 +870,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAgentsInfoRequest[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAgentsByGroupAndStatusRequest[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -880,7 +880,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ListAgentsInfoRequest) ReadField1(iprot thrift.TProtocol) error {
+func (p *ListAgentsByGroupAndStatusRequest) ReadField1(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -902,7 +902,7 @@ func (p *ListAgentsInfoRequest) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ListAgentsInfoRequest) ReadField2(iprot thrift.TProtocol) error {
+func (p *ListAgentsByGroupAndStatusRequest) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -924,9 +924,9 @@ func (p *ListAgentsInfoRequest) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ListAgentsInfoRequest) Write(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusRequest) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListAgentsInfoRequest"); err != nil {
+	if err = oprot.WriteStructBegin("ListAgentsByGroupAndStatusRequest"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -957,7 +957,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ListAgentsInfoRequest) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusRequest) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("group", thrift.LIST, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -982,7 +982,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *ListAgentsInfoRequest) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusRequest) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("status", thrift.LIST, 2); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1007,36 +1007,36 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *ListAgentsInfoRequest) String() string {
+func (p *ListAgentsByGroupAndStatusRequest) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListAgentsInfoRequest(%+v)", *p)
+	return fmt.Sprintf("ListAgentsByGroupAndStatusRequest(%+v)", *p)
 }
 
-type ListAgentsInfoResponse struct {
+type ListAgentsByGroupAndStatusResponse struct {
 	Total  int32        `thrift:"total,1" form:"total" json:"total" query:"total"`
 	Agents []*AgentInfo `thrift:"agents,2" form:"agents" json:"agents" query:"agents"`
 }
 
-func NewListAgentsInfoResponse() *ListAgentsInfoResponse {
-	return &ListAgentsInfoResponse{}
+func NewListAgentsByGroupAndStatusResponse() *ListAgentsByGroupAndStatusResponse {
+	return &ListAgentsByGroupAndStatusResponse{}
 }
 
-func (p *ListAgentsInfoResponse) GetTotal() (v int32) {
+func (p *ListAgentsByGroupAndStatusResponse) GetTotal() (v int32) {
 	return p.Total
 }
 
-func (p *ListAgentsInfoResponse) GetAgents() (v []*AgentInfo) {
+func (p *ListAgentsByGroupAndStatusResponse) GetAgents() (v []*AgentInfo) {
 	return p.Agents
 }
 
-var fieldIDToName_ListAgentsInfoResponse = map[int16]string{
+var fieldIDToName_ListAgentsByGroupAndStatusResponse = map[int16]string{
 	1: "total",
 	2: "agents",
 }
 
-func (p *ListAgentsInfoResponse) Read(iprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusResponse) Read(iprot thrift.TProtocol) (err error) {
 
 	var fieldTypeId thrift.TType
 	var fieldId int16
@@ -1095,7 +1095,7 @@ ReadStructBeginError:
 ReadFieldBeginError:
 	return thrift.PrependError(fmt.Sprintf("%T read field %d begin error: ", p, fieldId), err)
 ReadFieldError:
-	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAgentsInfoResponse[fieldId]), err)
+	return thrift.PrependError(fmt.Sprintf("%T read field %d '%s' error: ", p, fieldId, fieldIDToName_ListAgentsByGroupAndStatusResponse[fieldId]), err)
 SkipFieldError:
 	return thrift.PrependError(fmt.Sprintf("%T field %d skip type %d error: ", p, fieldId, fieldTypeId), err)
 
@@ -1105,7 +1105,7 @@ ReadStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T read struct end error: ", p), err)
 }
 
-func (p *ListAgentsInfoResponse) ReadField1(iprot thrift.TProtocol) error {
+func (p *ListAgentsByGroupAndStatusResponse) ReadField1(iprot thrift.TProtocol) error {
 	if v, err := iprot.ReadI32(); err != nil {
 		return err
 	} else {
@@ -1114,7 +1114,7 @@ func (p *ListAgentsInfoResponse) ReadField1(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ListAgentsInfoResponse) ReadField2(iprot thrift.TProtocol) error {
+func (p *ListAgentsByGroupAndStatusResponse) ReadField2(iprot thrift.TProtocol) error {
 	_, size, err := iprot.ReadListBegin()
 	if err != nil {
 		return err
@@ -1134,9 +1134,9 @@ func (p *ListAgentsInfoResponse) ReadField2(iprot thrift.TProtocol) error {
 	return nil
 }
 
-func (p *ListAgentsInfoResponse) Write(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusResponse) Write(oprot thrift.TProtocol) (err error) {
 	var fieldId int16
-	if err = oprot.WriteStructBegin("ListAgentsInfoResponse"); err != nil {
+	if err = oprot.WriteStructBegin("ListAgentsByGroupAndStatusResponse"); err != nil {
 		goto WriteStructBeginError
 	}
 	if p != nil {
@@ -1167,7 +1167,7 @@ WriteStructEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write struct end error: ", p), err)
 }
 
-func (p *ListAgentsInfoResponse) writeField1(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusResponse) writeField1(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("total", thrift.I32, 1); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1184,7 +1184,7 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 1 end error: ", p), err)
 }
 
-func (p *ListAgentsInfoResponse) writeField2(oprot thrift.TProtocol) (err error) {
+func (p *ListAgentsByGroupAndStatusResponse) writeField2(oprot thrift.TProtocol) (err error) {
 	if err = oprot.WriteFieldBegin("agents", thrift.LIST, 2); err != nil {
 		goto WriteFieldBeginError
 	}
@@ -1209,17 +1209,17 @@ WriteFieldEndError:
 	return thrift.PrependError(fmt.Sprintf("%T write field 2 end error: ", p), err)
 }
 
-func (p *ListAgentsInfoResponse) String() string {
+func (p *ListAgentsByGroupAndStatusResponse) String() string {
 	if p == nil {
 		return "<nil>"
 	}
-	return fmt.Sprintf("ListAgentsInfoResponse(%+v)", *p)
+	return fmt.Sprintf("ListAgentsByGroupAndStatusResponse(%+v)", *p)
 }
 
 type ZgsServiceDiscovery interface {
 	Regist(ctx context.Context, request *RegistRequest) (r *RegistResponse, err error)
 
-	ListAgents(ctx context.Context, reqeust *ListAgentsInfoRequest) (r *ListAgentsInfoResponse, err error)
+	ListAgents(ctx context.Context, reqeust *ListAgentsByGroupAndStatusRequest) (r *ListAgentsByGroupAndStatusResponse, err error)
 }
 
 type ZgsServiceDiscoveryClient struct {
@@ -1257,7 +1257,7 @@ func (p *ZgsServiceDiscoveryClient) Regist(ctx context.Context, request *RegistR
 	}
 	return _result.GetSuccess(), nil
 }
-func (p *ZgsServiceDiscoveryClient) ListAgents(ctx context.Context, reqeust *ListAgentsInfoRequest) (r *ListAgentsInfoResponse, err error) {
+func (p *ZgsServiceDiscoveryClient) ListAgents(ctx context.Context, reqeust *ListAgentsByGroupAndStatusRequest) (r *ListAgentsByGroupAndStatusResponse, err error) {
 	var _args ZgsServiceDiscoveryListAgentsArgs
 	_args.Reqeust = reqeust
 	var _result ZgsServiceDiscoveryListAgentsResult
@@ -1376,7 +1376,7 @@ func (p *zgsServiceDiscoveryProcessorListAgents) Process(ctx context.Context, se
 	iprot.ReadMessageEnd()
 	var err2 error
 	result := ZgsServiceDiscoveryListAgentsResult{}
-	var retval *ListAgentsInfoResponse
+	var retval *ListAgentsByGroupAndStatusResponse
 	if retval, err2 = p.handler.ListAgents(ctx, args.Reqeust); err2 != nil {
 		x := thrift.NewTApplicationException(thrift.INTERNAL_ERROR, "Internal error processing ListAgents: "+err2.Error())
 		oprot.WriteMessageBegin("ListAgents", thrift.EXCEPTION, seqId)
@@ -1698,16 +1698,16 @@ func (p *ZgsServiceDiscoveryRegistResult) String() string {
 }
 
 type ZgsServiceDiscoveryListAgentsArgs struct {
-	Reqeust *ListAgentsInfoRequest `thrift:"reqeust,1"`
+	Reqeust *ListAgentsByGroupAndStatusRequest `thrift:"reqeust,1"`
 }
 
 func NewZgsServiceDiscoveryListAgentsArgs() *ZgsServiceDiscoveryListAgentsArgs {
 	return &ZgsServiceDiscoveryListAgentsArgs{}
 }
 
-var ZgsServiceDiscoveryListAgentsArgs_Reqeust_DEFAULT *ListAgentsInfoRequest
+var ZgsServiceDiscoveryListAgentsArgs_Reqeust_DEFAULT *ListAgentsByGroupAndStatusRequest
 
-func (p *ZgsServiceDiscoveryListAgentsArgs) GetReqeust() (v *ListAgentsInfoRequest) {
+func (p *ZgsServiceDiscoveryListAgentsArgs) GetReqeust() (v *ListAgentsByGroupAndStatusRequest) {
 	if !p.IsSetReqeust() {
 		return ZgsServiceDiscoveryListAgentsArgs_Reqeust_DEFAULT
 	}
@@ -1782,7 +1782,7 @@ ReadStructEndError:
 }
 
 func (p *ZgsServiceDiscoveryListAgentsArgs) ReadField1(iprot thrift.TProtocol) error {
-	p.Reqeust = NewListAgentsInfoRequest()
+	p.Reqeust = NewListAgentsByGroupAndStatusRequest()
 	if err := p.Reqeust.Read(iprot); err != nil {
 		return err
 	}
@@ -1843,16 +1843,16 @@ func (p *ZgsServiceDiscoveryListAgentsArgs) String() string {
 }
 
 type ZgsServiceDiscoveryListAgentsResult struct {
-	Success *ListAgentsInfoResponse `thrift:"success,0,optional"`
+	Success *ListAgentsByGroupAndStatusResponse `thrift:"success,0,optional"`
 }
 
 func NewZgsServiceDiscoveryListAgentsResult() *ZgsServiceDiscoveryListAgentsResult {
 	return &ZgsServiceDiscoveryListAgentsResult{}
 }
 
-var ZgsServiceDiscoveryListAgentsResult_Success_DEFAULT *ListAgentsInfoResponse
+var ZgsServiceDiscoveryListAgentsResult_Success_DEFAULT *ListAgentsByGroupAndStatusResponse
 
-func (p *ZgsServiceDiscoveryListAgentsResult) GetSuccess() (v *ListAgentsInfoResponse) {
+func (p *ZgsServiceDiscoveryListAgentsResult) GetSuccess() (v *ListAgentsByGroupAndStatusResponse) {
 	if !p.IsSetSuccess() {
 		return ZgsServiceDiscoveryListAgentsResult_Success_DEFAULT
 	}
@@ -1927,7 +1927,7 @@ ReadStructEndError:
 }
 
 func (p *ZgsServiceDiscoveryListAgentsResult) ReadField0(iprot thrift.TProtocol) error {
-	p.Success = NewListAgentsInfoResponse()
+	p.Success = NewListAgentsByGroupAndStatusResponse()
 	if err := p.Success.Read(iprot); err != nil {
 		return err
 	}

@@ -35,18 +35,18 @@ def Init():
     global id
     
     hostname = socket.gethostname()
-    ip = socket.gethostbyname(hostname)
-    port = 9900 + random.randint(1,99)
-    id = str(uuid.uuid4())
+    ip = socket.gethostbyname(hostname) # 获取本地Ip
+    port = 9900 + random.randint(1,99) # 配置随机端口号
+    id = str(uuid.uuid4()) #生成唯一id
 	
     # 注册服务
     info = {'uuid':id,'ip':ip,'port':'{}'.format(port)}
-    info = json.dumps(info)
+    info = json.dumps(info) # 转为json
     logging.info('尝试注册 注册信息: {}'.format(info))
     r = requests.post(url='http://localhost:8888/regist', 
                       data=info,
                       headers={"Content-Type":"application/json"}
-                      )
+                      ) # 服务注册
     if r.status_code != 200:
         logging.info('注册服务失败 [{}]'.format(r.status_code))
         exit(-1)

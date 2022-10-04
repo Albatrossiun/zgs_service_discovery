@@ -40,9 +40,9 @@ func TestRegist(t *testing.T) {
 func TestListAgents(t *testing.T) {
 	var group []string
 	group = append(group, "online")
-	req := zgs_service_discovery.ListAgentsInfoRequest{
+	req := zgs_service_discovery.ListAgentsByGroupAndStatusRequest{
 		Group: group,
 	}
-	resp := srv.ListAgents(ctx, req)
+	resp := srv.ListAgentsByGroupAndStatus(ctx, req)
 	fmt.Println(resp)
 }

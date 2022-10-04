@@ -24,17 +24,17 @@ struct AgentInfo {
     6: string ext;
 }
 
-struct ListAgentsInfoRequest {
+struct ListAgentsByGroupAndStatusRequest {
     1: list<string> group;
     2: list<string> status;
 }
 
-struct ListAgentsInfoResponse {
+struct ListAgentsByGroupAndStatusResponse {
     1: i32 total;
     2: list<AgentInfo> agents;
 }
 
 service ZgsServiceDiscovery {
     RegistResponse Regist(1:RegistRequest request) (api.post="/regist");
-    ListAgentsInfoResponse ListAgents(1:ListAgentsInfoRequest reqeust) (api.post="/list_agents");
+    ListAgentsByGroupAndStatusResponse ListAgents(1:ListAgentsByGroupAndStatusRequest reqeust) (api.post="/list_agents");
 }
