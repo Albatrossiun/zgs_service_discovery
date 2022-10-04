@@ -25,15 +25,16 @@ type AgentsObj struct {
 	Status      string `json:"status"`
 	Group       string `json:"group"`
 	Ext         string `json:"ext"`
-	OfflineTime int    `json:"offline_time"`
+	OfflineTime int64  `json:"offline_time"`
 }
 
 func (u *UserService) Regist(ctx context.Context, req zgs_service_discovery.RegistRequest) zgs_service_discovery.RegistResponse {
 	agentsObj := &AgentsObj{
-		UUid:   req.UUID,
-		Ip:     req.IP,
-		Port:   req.Port,
-		Status: "online",
+		UUid:        req.UUID,
+		Ip:          req.IP,
+		Port:        req.Port,
+		Status:      "online",
+		OfflineTime: 0,
 	}
 	agentsObjJson, err := json.Marshal(agentsObj)
 	if err != nil {

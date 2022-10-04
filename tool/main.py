@@ -27,6 +27,7 @@ id = None
 
 @app.route("/status", methods=['GET'])
 def status():
+    print("被请求一次")
     return "ok", 200
 
 def Init():

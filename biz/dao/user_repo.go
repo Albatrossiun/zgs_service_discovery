@@ -28,7 +28,9 @@ func InitUserRepository() {
 // Regist create + update
 func (u *UserRepository) Regist(uuid, agentsObjJson string) error {
 	// 通过go向redis写入数据
-	_, err := pool.Get().Do("Set", uuid, agentsObjJson)
+	conn := pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("Set", uuid, agentsObjJson)
 	if err != nil {
 		fmt.Println("repo Regist err=", err)
 		return err
@@ -38,14 +40,20 @@ func (u *UserRepository) Regist(uuid, agentsObjJson string) error {
 
 func (u *UserRepository) ListAgents() ([]string, error) {
 	// 读取数据
+	conn := pool.Get()
+	defer conn.Close()
 	uuid := "service_*"
-	keys, err := pool.Get().Do("Keys", uuid)
+	keys, err := conn.Do("Keys", uuid)
 	if err != nil {
 		fmt.Println("repo ListAgents Get Do err=", err)
 		return nil, err
 	}
 
-	jsonList, err := redis.Strings(pool.Get().Do("mget", keys.([]interface{})...))
+	if keys == nil || len(keys.([]interface{})) == 0 {
+		fmt.Println("repo ListAgents is empty")
+		return nil, nil
+	}
+	jsonList, err := redis.Strings(conn.Do("mget", keys.([]interface{})...))
 	if err != nil {
 		fmt.Println("repo ListAgents Get Do err=", err)
 		return nil, err
@@ -57,7 +65,9 @@ func (u *UserRepository) ListAgents() ([]string, error) {
 }
 
 func (u *UserRepository) DeleteAgents(uuid string) error {
-	_, err := pool.Get().Do("Del", uuid)
+	conn := pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("Del", uuid)
 	if err != nil {
 		fmt.Println("repo Regist delete agent err = ", err)
 		return err

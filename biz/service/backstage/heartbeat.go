@@ -34,58 +34,56 @@ func StartHeartbeat() {
 				fmt.Println("StartHeartbeat() agentsObjList is empty")
 			} else {
 				for _, agent := range agentsObjList {
-					if agent.Group == "online" {
-						url := agent.Ip + ":" + agent.Port + "/status"
+					if agent.Status == "online" {
+						url := "http://" + agent.Ip + ":" + agent.Port + "/status"
 						resp, err := http.Get(url)
-						if err != nil {
-							fmt.Println("StartHeartbeat() http.Get(url) err = ", err)
-							continue
-						}
-						if resp.Status == "200" {
+						fmt.Println(err)
+						if err == nil && resp.Status == "200 OK" {
 							continue
 						} else {
 							// 修改redis的对应status = offline
 							agentsObj := &service.AgentsObj{
-								UUid:   agent.UUid,
-								Ip:     agent.Ip,
-								Port:   agent.Port,
-								Status: "offline",
+								UUid:        agent.UUid,
+								Ip:          agent.Ip,
+								Port:        agent.Port,
+								Status:      "offline",
+								OfflineTime: time.Now().Unix(),
 							}
 							err = updateAgentStatusByStruct(agentsObj)
 							if err != nil {
 								fmt.Println("StartHeartbeat() updateAgentStatusByStruct err = ", err)
 							}
 						}
-					} else if agent.Group == "offline" {
-						url := agent.Ip + ":" + agent.Port + "/status"
+					} else if agent.Status == "offline" {
+						url := "http://" + agent.Ip + ":" + agent.Port + "/status"
 						resp, err := http.Get(url)
-						if err != nil {
-							fmt.Println("StartHeartbeat() http.Get(url) err = ", err)
-							continue
-						}
-						if resp.Status == "200" {
+						fmt.Println(err)
+						if err == nil && resp.Status == "200 OK" {
 							// 修改redis的对应status = online
 							agentsObj := &service.AgentsObj{
-								UUid:   agent.UUid,
-								Ip:     agent.Ip,
-								Port:   agent.Port,
-								Status: "online",
+								UUid:        agent.UUid,
+								Ip:          agent.Ip,
+								Port:        agent.Port,
+								Status:      "online",
+								OfflineTime: 0,
 							}
 							err = updateAgentStatusByStruct(agentsObj)
 							if err != nil {
 								fmt.Println("StartHeartbeat() updateAgentStatusByStruct err = ", err)
 							}
 						} else {
-							// 在redis中删除数据
-							err = userDomain.DeleteAgents(agent.UUid)
-							if err != nil {
-								fmt.Println("StartHeartbeat() DeleteAgents err = ", err)
+							if time.Now().Unix()-agent.OfflineTime > 10000 {
+								// 在redis中删除数据
+								err = userDomain.DeleteAgents("service_" + agent.UUid)
+								if err != nil {
+									fmt.Println("StartHeartbeat() DeleteAgents err = ", err)
+								}
 							}
 						}
 					} else {
 						fmt.Println("StartHeartbeat() status error，delete the data directly")
 						// 在redis中删除数据
-						err = userDomain.DeleteAgents(agent.UUid)
+						err = userDomain.DeleteAgents("service_" + agent.UUid)
 						if err != nil {
 							fmt.Println("StartHeartbeat() DeleteAgents err = ", err)
 						}
@@ -93,7 +91,7 @@ func StartHeartbeat() {
 				}
 			}
 
-			time.Sleep(5)
+			time.Sleep(5 * time.Second) // 5秒
 		}
 	}()
 }
@@ -104,7 +102,8 @@ func updateAgentStatusByStruct(obj *service.AgentsObj) error {
 		fmt.Println("StartHeartbeat() Marshal err = ", err)
 		return err
 	}
-	err = userDomain.Regist(obj.UUid, string(agentsObjJson))
+
+	err = userDomain.Regist("service_"+obj.UUid, string(agentsObjJson))
 	if err != nil {
 		fmt.Println("StartHeartbeat() Regist err = ", err)
 		return err
