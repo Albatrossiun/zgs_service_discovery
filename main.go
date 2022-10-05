@@ -6,7 +6,6 @@ import (
 	"fmt"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/dao"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/handler/zgs_service_discovery"
-	"github.com/Albatrossiun/zgs_service_discovery/biz/service/backstage"
 	"github.com/Albatrossiun/zgs_service_discovery/biz/storage"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
@@ -22,7 +21,7 @@ func main() {
 	dao.InitRedis()
 	dao.InitUserRepository()
 	zgs_service_discovery.InitUserServiceHandler()
-	backstage.StartHeartbeat()
+	//backstage.StartHeartbeat()
 
 	register(h)
 	h.Spin()

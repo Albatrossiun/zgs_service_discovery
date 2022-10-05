@@ -34,7 +34,31 @@ struct ListAgentsByGroupAndStatusResponse {
     2: list<AgentInfo> agents;
 }
 
+// 设置ext
+struct UpdateAgentExtRequest {
+    1: string uuid;
+    2: string ext;
+}
+
+struct UpdateAgentExtResponse {
+    1: i32 code;
+    2: string message;
+}
+
+// 设置group
+struct UpdateOnlineAgentsGroupRequest {
+    1: list<string> uuids;
+    2: string group;
+}
+
+struct UpdateOnlineAgentsGroupResponse {
+    1: i32 code;
+    2: string message;
+}
+
 service ZgsServiceDiscovery {
     RegistResponse Regist(1:RegistRequest request) (api.post="/regist");
     ListAgentsByGroupAndStatusResponse ListAgents(1:ListAgentsByGroupAndStatusRequest reqeust) (api.post="/list_agents");
+    UpdateAgentExtResponse UpdateAgentExt(1:UpdateAgentExtRequest request) (api.post="/update_agent");
+    UpdateOnlineAgentsGroupResponse UpdateOnlineAgentsGroup(1:UpdateOnlineAgentsGroupRequest request) (api.post="/update_group");
 }

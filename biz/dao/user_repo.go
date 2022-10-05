@@ -32,7 +32,7 @@ func (u *UserRepository) Regist(uuid, agentsObjJson string) error {
 	defer conn.Close()
 	_, err := conn.Do("Set", uuid, agentsObjJson)
 	if err != nil {
-		fmt.Println("repo Regist err=", err)
+		fmt.Println("repo Regist err = ", err)
 		return err
 	}
 	return nil
@@ -45,7 +45,7 @@ func (u *UserRepository) ListAgents() ([]string, error) {
 	uuid := "service_*"
 	keys, err := conn.Do("Keys", uuid)
 	if err != nil {
-		fmt.Println("repo ListAgents Get Do err=", err)
+		fmt.Println("repo ListAgents Get Do err = ", err)
 		return nil, err
 	}
 
@@ -55,7 +55,7 @@ func (u *UserRepository) ListAgents() ([]string, error) {
 	}
 	jsonList, err := redis.Strings(conn.Do("mget", keys.([]interface{})...))
 	if err != nil {
-		fmt.Println("repo ListAgents Get Do err=", err)
+		fmt.Println("repo ListAgents Get Do err = ", err)
 		return nil, err
 	}
 	//for _, value := range jsonList {
@@ -73,4 +73,21 @@ func (u *UserRepository) DeleteAgents(uuid string) error {
 		return err
 	}
 	return nil
+}
+
+func (u *UserRepository) GetAgentsByUUids(uuids []string) ([]string, error) {
+	// 读取数据
+	conn := pool.Get()
+	defer conn.Close()
+	var keys []interface{}
+	for _, uid := range uuids {
+		uidstr := "service_" + uid
+		keys = append(keys, uidstr)
+	}
+	jsonList, err := redis.Strings(conn.Do("mget", keys...))
+	if err != nil {
+		fmt.Println("repo ListAgents MGet Do err = ", err)
+		return nil, err
+	}
+	return jsonList, nil
 }

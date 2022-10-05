@@ -41,3 +41,12 @@ func (u *UserDomain) DeleteAgents(uuid string) error {
 	}
 	return nil
 }
+
+func (u *UserDomain) GetAgentsByUUids(uuids []string) ([]string, error) {
+	agentsList, err := u.userRepository.GetAgentsByUUids(uuids)
+	if err != nil {
+		fmt.Println("domain GetAgentsByUUids err = ", err)
+		return nil, err
+	}
+	return agentsList, nil
+}

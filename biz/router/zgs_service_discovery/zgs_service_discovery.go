@@ -20,4 +20,6 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	root.POST("/list_agents", append(_list_gentsMw(), zgs_service_discovery.ListAgents)...)
 	root.POST("/regist", append(_registMw(), zgs_service_discovery.Regist)...)
+	root.POST("/update_agent", append(_update_gentextMw(), zgs_service_discovery.UpdateAgentExt)...)
+	root.POST("/update_group", append(_updateonline_gentsgroupMw(), zgs_service_discovery.UpdateOnlineAgentsGroup)...)
 }

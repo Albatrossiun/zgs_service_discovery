@@ -38,11 +38,23 @@ func TestRegist(t *testing.T) {
 }
 
 func TestListAgents(t *testing.T) {
-	var group []string
-	group = append(group, "online")
+	var status []string
+	status = append(status, "online")
 	req := zgs_service_discovery.ListAgentsByGroupAndStatusRequest{
-		Group: group,
+		Status: status,
 	}
 	resp := srv.ListAgentsByGroupAndStatus(ctx, req)
+	fmt.Println(resp)
+}
+
+func TestUpdateOnlineAgentsGroup(t *testing.T) {
+	var uuids []string
+	uuids = append(uuids, "c7dc5d07-eead-4228-a711-40e5302e705d", "5345da4e-ecfa-4f1d-afeb-ac88bd441959", "ad9e32da-e2f2-4a54-b189-07f10e6780eb")
+
+	req := zgs_service_discovery.UpdateOnlineAgentsGroupRequest{
+		Group: "groupA",
+		Uuids: uuids,
+	}
+	resp := srv.UpdateOnlineAgentsGroup(ctx, req)
 	fmt.Println(resp)
 }

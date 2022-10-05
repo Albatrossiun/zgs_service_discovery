@@ -20,3 +20,13 @@ func _registMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _update_gentextMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
+
+func _updateonline_gentsgroupMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

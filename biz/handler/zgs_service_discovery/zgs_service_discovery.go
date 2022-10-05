@@ -48,3 +48,35 @@ func ListAgents(ctx context.Context, c *app.RequestContext) {
 
 	c.JSON(200, resp)
 }
+
+// UpdateAgentExt .
+// @router /update_agent [POST]
+func UpdateAgentExt(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req zgs_service_discovery.UpdateAgentExtRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+
+	resp := srv.UpdateAgentExt(ctx, req)
+
+	c.JSON(200, resp)
+}
+
+// UpdateOnlineAgentsGroup .
+// @router /update_group [POST]
+func UpdateOnlineAgentsGroup(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req zgs_service_discovery.UpdateOnlineAgentsGroupRequest
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		c.String(400, err.Error())
+		return
+	}
+
+	resp := srv.UpdateOnlineAgentsGroup(ctx, req)
+
+	c.JSON(200, resp)
+}
