@@ -107,23 +107,27 @@ func (u *UserService) ListAgentsByGroupAndStatus(ctx context.Context, req zgs_se
 	}
 
 	var agentsList []AgentsObj
+	flagStatus := false
+	flagGroup := false
 	for _, obj := range agentsObjList {
-		if len(req.Group) == 0 && len(req.Status) == 0 {
+		if len(req.Status) == 0 {
+			flagStatus = true
+		}
+		if _, exists := setStatus[obj.Status]; exists {
+			flagStatus = true
+		}
+
+		if len(req.Group) == 0 {
+			flagGroup = true
+		}
+		if _, exists := setGroup[obj.Group]; exists {
+			flagGroup = true
+		}
+
+		// ....
+
+		if flagStatus && flagGroup {
 			agentsList = append(agentsList, obj)
-		} else if len(req.Group) == 0 {
-			if _, exists := setStatus[obj.Status]; exists {
-				agentsList = append(agentsList, obj)
-			}
-		} else if len(req.Status) == 0 {
-			if _, exists := setGroup[obj.Group]; exists {
-				agentsList = append(agentsList, obj)
-			}
-		} else {
-			_, exists1 := setGroup[obj.Group]
-			_, exists2 := setStatus[obj.Status]
-			if exists1 && exists2 {
-				agentsList = append(agentsList, obj)
-			}
 		}
 	}
 
@@ -166,16 +170,26 @@ func (u *UserService) ListAgentsWithUnmarshal() ([]AgentsObj, error) {
 }
 
 func (u *UserService) UpdateAgentExt(ctx context.Context, req zgs_service_discovery.UpdateAgentExtRequest) zgs_service_discovery.UpdateAgentExtResponse {
-	agentsObjList, err := u.ListAgentsWithUnmarshal()
+	uuids := make([]string, 0)
+	uuids = append(uuids, req.UUID)
+	agentsObjList, err := u.userDomain.GetAgentsByUUids(uuids)
 	if err != nil {
-		fmt.Println("service u.GetAllAgentsInRedis() err = ", err)
+		fmt.Println("service u.userDomain.GetAgentsByUUids() err = ", err)
 		return zgs_service_discovery.UpdateAgentExtResponse{
 			Code:    500,
 			Message: err.Error(),
 		}
 	}
 	for _, obj := range agentsObjList {
-		if obj.UUid == req.UUID && obj.Ext != req.Ext {
+		var objStruct AgentsObj
+		err = json.Unmarshal([]byte(obj), &objStruct)
+		if err != nil {
+			return zgs_service_discovery.UpdateAgentExtResponse{
+				Code:    500,
+				Message: err.Error(),
+			}
+		}
+		if objStruct.UUid == req.UUID && objStruct.Ext != req.Ext {
 			if req.Ext != "busy" && req.Ext != "free" && req.Ext != "" {
 				fmt.Println("service u.GetAllAgentsInRedis() req.Ext is false")
 				return zgs_service_discovery.UpdateAgentExtResponse{
@@ -183,11 +197,8 @@ func (u *UserService) UpdateAgentExt(ctx context.Context, req zgs_service_discov
 					Message: "the value of agent ext can only be BUSY, FREE or empty",
 				}
 			}
-			agentsObj := &AgentsObj{
-				UUid: req.UUID,
-				Ext:  req.Ext,
-			}
-			agentsObjJson, err := json.Marshal(agentsObj)
+			objStruct.Ext = req.Ext
+			agentsObjJson, err := json.Marshal(objStruct)
 			if err != nil {
 				fmt.Println("service UpdateAgentExt Marshal err = ", err)
 				return zgs_service_discovery.UpdateAgentExtResponse{
@@ -195,7 +206,7 @@ func (u *UserService) UpdateAgentExt(ctx context.Context, req zgs_service_discov
 					Message: err.Error(),
 				}
 			}
-			err = u.userDomain.Regist("service_"+obj.UUid, string(agentsObjJson))
+			err = u.userDomain.Regist("service_"+objStruct.UUid, string(agentsObjJson))
 			if err != nil {
 				fmt.Println("service Regist err = ", err)
 				return zgs_service_discovery.UpdateAgentExtResponse{
@@ -226,19 +237,15 @@ func (u *UserService) UpdateOnlineAgentsGroup(ctx context.Context, req zgs_servi
 
 	for _, obj := range agentsObjList {
 		if _, exists := uuidsMap[obj.UUid]; exists {
-			if obj.Status != "online" && obj.Ext != "free" {
+			if obj.Status != "online" && (obj.Ext != "free" || obj.Ext != "") {
 				return zgs_service_discovery.UpdateOnlineAgentsGroupResponse{
-					Code:    500,
+					Code:    400,
 					Message: "there is an agent whose state is not ONLINE or ext is not FREE",
 				}
 			}
-			if obj.Group == req.Group {
-				return zgs_service_discovery.UpdateOnlineAgentsGroupResponse{
-					Code:    200,
-					Message: "this is consistent with the source data and does not need to be modified",
-				}
+			if obj.Group != req.Group {
+				uuids = append(uuids, obj.UUid)
 			}
-			uuids = append(uuids, obj.UUid)
 		}
 	}
 
