@@ -62,6 +62,7 @@ func (d *DistributedLock) watchDog() {
 					conn.Close()
 					break
 				}
+				d.startTime = time.Now()
 			}
 		}
 
