@@ -38,6 +38,19 @@ func (u *UserRepository) Regist(uuid, agentsObjJson string) error {
 	return nil
 }
 
+// MRegist mCreate + mUpdate
+func (u *UserRepository) MRegist(uuid, agentsObjJson string) error {
+	// 通过go向redis写入数据
+	conn := pool.Get()
+	defer conn.Close()
+	_, err := conn.Do("Set", uuid, agentsObjJson)
+	if err != nil {
+		fmt.Println("repo Regist err = ", err)
+		return err
+	}
+	return nil
+}
+
 func (u *UserRepository) ListAgents() ([]string, error) {
 	// 读取数据
 	conn := pool.Get()
